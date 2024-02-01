@@ -1,33 +1,55 @@
 import React, {useState} from 'react';
 import './App.css';
-import {Produkt, Produkte} from "./Produkte";
+import { PRODUKTE } from './produktDaten';
+import { Produkt } from './produkt';
 import Warenkorb from "./Warenkorb";
+import Warenkorbtabelle from "./Warenkorbtabelle";
+import Produkttabelle from "./Produkttabelle";
 
-
-const ProduktDaten: Produkt[] = [
-    { name: 'Milch', id: 1, preis: 1.50 },
-    { name: 'Brot', id: 2, preis: 3.50 },
-    { name: 'Tomaten', id: 3, preis: 3.0 },
-];
 
 function App() {
-    const [produkte, setProdukte] = useState<Produkt[]>([]);
+    const produkte: Produkt[] = PRODUKTE
+    const [selectedProducts, setSelectedProducts] = useState<{[key: string]: number}>({})
 
-    const hinzufuegen = (produkt: Produkt) => {
-        setProdukte(prevProdukte => [...prevProdukte, produkt]);
-    };
-    const entfernen = (produktId: number) => {
-        const update = produkte.filter(produkt => produkt.id !== produktId);
-        setProdukte(update);
-    };
+
+    function entfernen(productToRemove: Produkt) {
+        const updatedProducts = { ...selectedProducts };
+        if (productToRemove.name in updatedProducts) {
+            updatedProducts[productToRemove.name]--;
+
+            if (updatedProducts[productToRemove.name] === 0) {
+                delete updatedProducts[productToRemove.name];
+            }
+
+            setSelectedProducts(updatedProducts);
+        }
+    }
+
+    function hinzufuegen(produktToAdd:Produkt) {
+
+        const isNewProdut = !(produktToAdd.name in selectedProducts)
+        setSelectedProducts(
+            {
+                ...selectedProducts, [produktToAdd.name]: isNewProdut ? 1 :
+                    selectedProducts[produktToAdd.name] + 1
+            }
+        )
+
+
+    }
 
     return (
-        <div className="App">
+        <>
             <h1>SHOP</h1>
-            <Produkte produkt={ProduktDaten} hinzufuegen={hinzufuegen} />
-            <Warenkorb warenkorb={produkte} entfernen={entfernen} />
-        </div>
-    );
-}
+                <Produkttabelle produkte={produkte}
+                                hinzufuegen={hinzufuegen}
+            />
+                <Warenkorb
+                    ausgewählteProdukte={selectedProducts}
+                    entfernen={entfernen}
+                />
+        </>
+    )
+    }
 
 export default App;
