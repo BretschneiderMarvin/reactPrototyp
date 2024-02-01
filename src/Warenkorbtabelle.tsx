@@ -20,6 +20,9 @@ export default function Warenkorbtabelle ({produkte,entfernen}:{produkte:{[key:s
 
 
 
+
+
+
     return(
         <table>
             <thead>
