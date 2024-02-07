@@ -1,38 +1,26 @@
 import Warenkorbeintrag from "./Warenkorbeintrag"
 import {Produkt} from "./produkt";
 import React from "react";
+import {PRODUKTE} from "./produktDaten";
 
-export default function Warenkorbtabelle ({produkte,entfernen}:{produkte:{[key:string]:number},entfernen:Function}){
-
-    const warenkorbEinträge:any[]=[]
-    for(let produkt in produkte){
-        warenkorbEinträge.push(
-            <Warenkorbeintrag
-                produkt={produkt}
-                produktname={produkt}
-                produktanzahl={produkte[produkt]}
-                entfernen={entfernen}
-                key={crypto.randomUUID()}
-
-            />
-        )
-            }
-
-
-
-
-
-
-    return(
-        <table>
+export default function Warenkorbtabelle({ produkte, entfernen }: { produkte: Produkt[] , entfernen: Function }) {
+    return (
+        <table className='cartTable'>
             <thead>
-            <tr>
-                <th>Artikel</th>
-                <th>Anzahl</th>
+            <tr className='cartHeader'>
+                <th className='cartArtikel'>Artikel</th>
+                <th className='cartAnzahl'>Anzahl</th>
+                <th className='cartBtn'></th>
             </tr>
             </thead>
             <tbody>
-            {warenkorbEinträge}
+            {produkte.map(item => (
+                <Warenkorbeintrag
+                    produkt={item}
+                    entfernen={entfernen}
+                    key={crypto.randomUUID()}
+                />
+            ))}
             </tbody>
         </table>
     )
